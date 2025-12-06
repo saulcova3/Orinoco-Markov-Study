@@ -132,6 +132,130 @@ Cada estación presentó:
 - **🌍 Cobertura**: Venezuela y Colombia
 - **⚡ Tasa de éxito**: 100% en descarga
 
+## 📓 Análisis en Jupyter Notebooks
+
+### **📊 `explore_1_AJuste_data.ipynb` - Calibración por punto de anclaje**
+
+#### **📍 Objetivo**
+Encontrar la estación más cercana a Ciudad Bolívar y ajustar sus datos mediante el **método del punto de anclaje** para obtener una serie temporal representativa.
+
+#### **🔍 Metodología**
+1. **Geolocalización**: Uso de `geopy` para calcular distancias desde Ciudad Bolívar (8.1333, -63.5333)
+2. **Selección**: Estación 15436 identificada como la más cercana
+3. **Calibración**: Ajuste basado en nivel promedio reportado por HIDROMET-UCV (14.03 msnm, septiembre 2024)
+4. **Validación**: Comparación visual serie cruda vs calibrada
+
+#### **📈 Resultados clave**
+- **Estación seleccionada**: 15436 (más cercana a Ciudad Bolívar)
+- **Método**: Punto de anclaje con referencia hidrométrica oficial
+- **Output**: Serie temporal calibrada lista para análisis
+
+#### **⚠️ Limitaciones reconocidas**
+1. No considera factores locales geográficos/estacionales
+2. Reajuste depende únicamente del desfase existente
+3. Recomendado solo para distancias cortas
+
+---
+
+### **🔮 `explore_2_Modelado_matemático.ipynb` - Análisis Markoviano**
+
+#### **🎯 Objetivo**
+Modelar el comportamiento del Orinoco como **proceso estocástico markoviano**, identificando patrones de persistencia en subidas/bajadas del nivel del agua.
+
+#### **🔄 Pipeline de análisis**
+1. **Preprocesamiento**:
+   - Consolidación: `estacion_id + (lat, lon) + sufijo regional`
+   - Clasificación regional: HO (Alto), MO (Medio), LO (Bajo), Delta
+   - Segmentación temporal: Épocas de lluvia/sequía por región
+
+2. **Segmentación**:
+   - **Espacial**: 4 regiones hidrológicas
+   - **Temporal**: 8 segmentos hidro-temporales (región × época)
+
+3. **Modelado Markoviano**:
+   - Discretización: Estados binarios (1=sube, 0=baja)
+   - Cálculo: Matrices de transición 2×2 por región
+   - Métrica clave: **Persistencia** = (P(0→0) + P(1→1)) / 2
+
+#### **📊 Hallazgos principales**
+
+##### **Persistencia por región (orden descendente)**
+```
+1. HO (Alto Orinoco):    0.698  ← Mayor predictibilidad
+2. LO (Bajo Orinoco):    0.696
+3. MO (Orinoco Medio):   0.638
+4. Delta:                0.625  ← Mayor variabilidad
+```
+
+##### **Estadísticas globales**
+- **Transiciones analizadas**: 9,241 (muestra estadísticamente robusta)
+- **Estaciones**: 70/70 aportaron datos (cobertura completa)
+- **Tendencia global**: 54.5% probabilidad de bajada
+- **Persistencias**: >0.62 en todas las regiones (señal clara detectable)
+
+#### **💡 Interpretación hidrológica**
+
+##### **🏔️ Alto Orinoco (HO)**
+- Comportamiento más "conservador"
+- Responde lentamente a cambios
+- **73.7%** probabilidad de continuar bajando si ya está bajando
+- Ideal para predicciones a corto plazo
+
+##### **🌊 Delta**
+- Influencia de mareas evidente
+- Comportamiento más errático
+- Mayor probabilidad de cambio de tendencia
+- Requiere monitoreo más frecuente
+
+#### **🚀 Recomendaciones operativas**
+
+##### **Para sistema de alertas**
+```python
+# Lógica recomendada:
+if region in ['HO', 'LO'] and estado_actual == 'bajando':
+    alerta = "Alta probabilidad de continuar bajando (>70%)"
+elif region == 'Delta':
+    alerta = "Monitoreo intensivo - alta variabilidad"
+```
+
+##### **Para gestión del río**
+1. **HO/LO**: Enfocar recursos en tendencias establecidas
+2. **Delta**: Monitoreo más frecuente (mayor incertidumbre)
+3. **Umbral acción**: >70% persistencia en bajadas
+
+##### **Para predicción**
+- Modelo más confiable: "Si está bajando, probablemente siga bajando"
+- Menor confianza en cambios bruscos de subida a bajada
+- Patrones consistentes entre regiones → resultados confiables
+
+#### **✅ Validación del modelo**
+- **Cobertura**: 100% de estaciones analizadas
+- **Muestra**: 9,241 transiciones (robustez estadística)
+- **Consistencia**: Patrones coherentes entre regiones
+- **Aplicabilidad**: Resultados útiles para gestión hidrológica
+
+---
+
+## 🔬 **Síntesis metodológica**
+
+### **Del dato crudo al insight operativo**
+```
+Datos satelitales → Pipeline ETL → Segmentación → Matrices Markov → Recomendaciones
+      (API DAHITI)    (scripts/)   (notebooks/)    (análisis)      (gestión)
+```
+
+### **Valor agregado del análisis**
+1. **Científico**: Validación empírica de propiedad markoviana en sistema fluvial
+2. **Práctico**: Herramientas concretas para gestión hidrológica
+3. **Metodológico**: Framework reproducible para otros ríos
+4. **Operativo**: Sistema de alertas basado en probabilidades calculadas
+
+---
+
+**📅 Análisis completado en Diciembre 2024**  
+**🔬 Metodología: Procesos estocásticos + Hidrología aplicada**  
+**🎯 Objetivo logrado: Modelado predictivo para gestión del Río Orinoco**
+
 ## 📚 Fuentes académicas
 
 **Schwatke, C., Dettmering, D., Bosch, W., and Seitz, F.:**  
