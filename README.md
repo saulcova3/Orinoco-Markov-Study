@@ -142,7 +142,7 @@ Encontrar la estación más cercana a Ciudad Bolívar y ajustar sus datos median
 #### **🔍 Metodología**
 1. **Geolocalización**: Uso de `geopy` para calcular distancias desde Ciudad Bolívar (8.1333, -63.5333)
 2. **Selección**: Estación 15436 identificada como la más cercana
-3. **Calibración**: Ajuste basado en nivel promedio reportado por HIDROMET-UCV (14.03 msnm, septiembre 2024)
+3. **Calibración**: Ajuste basado en nivel promedio reportado por HIDROMET-UCV (14.03 msnm, septiembre 2025)
 4. **Validación**: Comparación visual serie cruda vs calibrada
 
 #### **📈 Resultados clave**
@@ -252,7 +252,7 @@ Datos satelitales → Pipeline ETL → Segmentación → Matrices Markov → Rec
 
 ---
 
-**📅 Análisis completado en Diciembre 2024**  
+**📅 Análisis completado en Diciembre 2025**  
 **🔬 Metodología: Procesos estocásticos + Hidrología aplicada**  
 **🎯 Objetivo logrado: Modelado predictivo para gestión del Río Orinoco**
 
@@ -320,6 +320,6 @@ python scripts/crear_master_database.py
 
 ---
 
-**📅 Proyecto realizado en Diciembre 2024**  
+**📅 Proyecto realizado en Diciembre 2025**  
 **👨‍💻 Desarrollado por Saul Cova**  
 **🌐 Repositorio: [github.com/saulcova3/Orinoco-Markov-Study](https://github.com/saulcova3/Orinoco-Markov-Study)**
